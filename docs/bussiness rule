@@ -1,0 +1,40 @@
+Business Rules
+User Authentication
+
+Guest users can upload and translate comics but cannot save history.
+
+Registered users can save translations, access history, and sync across devices.
+
+Upload Methods
+
+Device Upload: Users can upload images from gallery/camera (formats: JPG, PNG, WEBP).
+
+Link Upload: Users can paste a URL (supports direct image links or comic hosting sites like Webtoon, MangaDex).
+
+AI Translation
+
+Detects text in comics via OCR (supports multiple languages).
+
+Preserves original art; replaces text bubbles with translated text.
+
+Offers 3+ translation style options (e.g., literal, localized, formal/informal).
+
+Output & Sharing
+
+Translated comics are downloadable as images/PDFs.
+
+Watermark added for free users; removable via premium subscription.
+
+Share directly to social media or messaging apps.
+
+Monetization
+
+Free tier: 5 translations/day, watermarked.
+
+Premium ($5/month): Unlimited, no watermark, priority AI processing.
+
+Compliance
+
+Copyright disclaimer: Users must own rights to uploaded content.
+
+Auto-reject NSFW content via image detection.

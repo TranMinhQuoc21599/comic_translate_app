@@ -1,0 +1,57 @@
+Screen List
+Onboarding Screens
+
+Welcome screen (app description + "Try as Guest" / "Sign Up").
+
+Permissions request (camera, gallery, storage access).
+
+Home Screen
+
+Upload buttons ("From Device" / "From Link").
+
+Recent translations (for logged-in users).
+
+Premium upgrade CTA (if free user).
+
+Upload Screens
+
+Device Upload: Gallery/camera picker + crop/edit tool.
+
+Link Upload: Text field for URL + preview thumbnail.
+
+Translation Screen
+
+Original vs. translated comic side-by-side.
+
+Options to adjust text style/font size.
+
+Buttons: "Re-translate," "Download," "Share," "Save".
+
+History Screen (Registered Users)
+
+List of past translations with thumbnails.
+
+Filter by date/source (device/link).
+
+Settings Screen
+
+Language preferences (source/target).
+
+Toggle watermark/notifications.
+
+Subscription management.
+
+Premium Upgrade Screen
+
+Pricing plans + features comparison.
+
+Payment gateway integration (Google Pay/Apple Pay).
+
+Additional Notes
+Error Handling:
+
+"Unsupported link" alerts.
+
+"Low image quality" warnings.
+
+Offline Mode: Cache recent translations for offline access (premium feature).
