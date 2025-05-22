@@ -67,7 +67,7 @@ class _ScanAnimationWidgetState extends State<ScanAnimationWidget>
                     child: Container(
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.blue, width: 2),
-                        color: Colors.blue.withOpacity(0.2),
+                        color: Colors.blue.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
@@ -81,7 +81,7 @@ class _ScanAnimationWidgetState extends State<ScanAnimationWidget>
         if (widget.regions.isNotEmpty)
           Positioned.fill(
             child: Container(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
               child: const Center(
                 child: CircularProgressIndicator(
                   valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),

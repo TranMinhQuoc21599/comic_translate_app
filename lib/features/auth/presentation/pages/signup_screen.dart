@@ -123,7 +123,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   const Text('Already have an account?'),
                   TextButton(
                     onPressed: () {
-                      // TODO: Navigate to sign in screen
+                      // TODO: Nign in screen
                     },
                     child: const Text('Sign In'),
                   ),

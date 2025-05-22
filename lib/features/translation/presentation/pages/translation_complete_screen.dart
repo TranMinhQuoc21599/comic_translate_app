@@ -1,8 +1,18 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../../../shared/services/aistudio_service.dart';
+import '../../../../shared/services/gemini_service.dart';
 
-class TranslationBatchCompleteScreen extends StatelessWidget {
+class TextRegion {
+  final Rect boundingBox;
+  final String? translatedText;
+
+  TextRegion({
+    required this.boundingBox,
+    this.translatedText,
+  });
+}
+
+class TranslationBatchCompleteScreen extends StatefulWidget {
   final List<TranslationResult> results;
   final VoidCallback onDone;
 
@@ -13,63 +23,132 @@ class TranslationBatchCompleteScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<TranslationBatchCompleteScreen> createState() =>
+      _TranslationBatchCompleteScreenState();
+}
+
+class _TranslationBatchCompleteScreenState
+    extends State<TranslationBatchCompleteScreen> {
+  final GeminiService _geminiService = GeminiService();
+  String _translatedText = '';
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _translateImage();
+  }
+
+  Future<void> _translateImage() async {
+    try {
+      final result = widget.results.first;
+      final imageFile = File(result.imagePath);
+      final imageBytes = await imageFile.readAsBytes();
+
+      final translatedText = await _geminiService.translateImageText(
+        imageBytes: imageBytes,
+        sourceLanguage: 'English',
+        targetLanguage: 'Vietnamese',
+      );
+
+      if (mounted) {
+        setState(() {
+          _translatedText = translatedText;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final result = widget.results.first;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Translation Complete',
-          style: TextStyle(color: Colors.white),
+        leading: BackButton(onPressed: widget.onDone),
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Tiếng Nhật'),
+            Icon(Icons.arrow_forward, size: 20),
+            Text('Tiếng Việt'),
+          ],
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.black,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.volume_up),
+            onPressed: () {/* TODO: Implement text-to-speech */},
+          ),
+        ],
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: results.length + 1,
-        separatorBuilder: (_, __) => const SizedBox(height: 32.0),
-        itemBuilder: (context, index) {
-          if (index == results.length) {
-            return ElevatedButton(
-              onPressed: onDone,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
+      body: Stack(
+        children: [
+          // Original Image
+          Positioned.fill(
+            child: Image.file(
+              File(result.imagePath),
+              fit: BoxFit.contain,
+            ),
+          ),
+          // Translation Overlay
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(),
+            )
+          else if (_error != null)
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Lỗi dịch: $_error',
+                    style: const TextStyle(color: Colors.red),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _translateImage,
+                    child: const Text('Thử lại'),
+                  ),
+                ],
               ),
-              child: const Text(
-                'Done',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
+            )
+          else
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.all(16),
+                color: Colors.black.withOpacity(0.8),
+                child: SingleChildScrollView(
+                  child: Text(
+                    _translatedText,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
                 ),
               ),
-            );
-          }
-          final result = results[index];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.file(
-                  File(result.imagePath),
-                  fit: BoxFit.contain,
-                  height: 200,
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Text(
-                  result.translatedText,
-                  style: const TextStyle(fontSize: 16.0),
-                ),
-              ),
-            ],
-          );
-        },
+            ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _translateImage,
+        child: const Icon(Icons.refresh),
       ),
     );
   }
@@ -113,7 +192,7 @@ class TranslationResultOverlayScreen extends StatelessWidget {
                 height: region.boundingBox.height,
                 child: Container(
                   alignment: Alignment.center,
-                  color: Colors.black.withOpacity(0.4),
+                  color: Colors.black.withValues(alpha: 0.4),
                   child: Text(
                     region.translatedText ?? '',
                     style: const TextStyle(

@@ -71,13 +71,13 @@ class _LinkUploadScreenState extends State<LinkUploadScreen> {
       final String hash = chapter['hash'] as String;
       final List<dynamic> images = chapter['data'] as List<dynamic>;
 
-      if (images == null || (images is List && images.isEmpty)) {
+      if ((images.isEmpty)) {
         throw Exception('No images found in this chapter');
       }
 
       // Get all image URLs from the chapter
       return List<String>.from(
-        (images as List).map((filename) => '$baseUrl/data/$hash/$filename'),
+        (images).map((filename) => '$baseUrl/data/$hash/$filename'),
       );
     } catch (e) {
       if (e is Exception) {
