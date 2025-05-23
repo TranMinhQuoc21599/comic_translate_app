@@ -132,7 +132,7 @@ class _TranslationBatchCompleteScreenState
               right: 0,
               child: Container(
                 padding: const EdgeInsets.all(16),
-                color: Colors.black.withOpacity(0.8),
+                color: Colors.black.withValues(alpha: 0.8),
                 child: SingleChildScrollView(
                   child: Text(
                     _translatedText,
@@ -181,34 +181,75 @@ class TranslationResultOverlayScreen extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          Image.file(File(imagePath),
+          // Background Image
+          Positioned.fill(
+            child: Image.file(
+              File(imagePath),
               fit: BoxFit.contain,
-              width: double.infinity,
-              height: double.infinity),
-          ...regions.map((region) => Positioned(
-                left: region.boundingBox.left,
-                top: region.boundingBox.top,
-                width: region.boundingBox.width,
-                height: region.boundingBox.height,
-                child: Container(
-                  alignment: Alignment.center,
-                  color: Colors.black.withValues(alpha: 0.4),
-                  child: Text(
-                    region.translatedText ?? '',
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
+            ),
+          ),
+          // Text Region Overlays
+          Positioned.fill(
+            child: Stack(
+              children: regions
+                  .map((region) => Positioned(
+                        left: region.boundingBox.left,
+                        top: region.boundingBox.top,
+                        width: region.boundingBox.width,
+                        height: region.boundingBox.height,
+                        child: Container(
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 2,
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            region.translatedText ?? '',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              height: 1.2,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 4,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ))
+                  .toList(),
+            ),
+          ),
+          // Done Button
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 32),
+                child: ElevatedButton(
+                  onPressed: onDone,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 32,
+                      vertical: 16,
+                    ),
+                  ),
+                  child: const Text(
+                    'Done',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              )),
-          Positioned(
-            bottom: 32,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: ElevatedButton(
-                onPressed: onDone,
-                child: const Text('Done'),
               ),
             ),
           ),

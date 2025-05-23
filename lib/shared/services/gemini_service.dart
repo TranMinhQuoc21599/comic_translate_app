@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:flutter/services.dart';
-import 'dart:io';
 
 /// A service class that handles translations using the Gemini AI API.
 /// This service provides methods for translating text and analyzing images for translation.
@@ -62,6 +61,13 @@ Extract and translate all text from this image from $sourceLanguage to $targetLa
 Maintain the original meaning and context.
 If there are any cultural references, try to adapt them appropriately.
 Format the output as a list of translations, with each line showing the original text and its translation.
+
+Show the text in image and the translation in Vietnamese fomat like this:
+Text: <text>
+Translation: <translation>
+
+If the text is not in the image, return "No text found".
+Delete text on image, change by translation.
 ''';
       final content = [
         Content.multi([

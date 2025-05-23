@@ -13,15 +13,14 @@ class HistoryScreen extends StatelessWidget {
             onSelected: (String value) {
               // TODO: Implement filtering
             },
-            itemBuilder:
-                (BuildContext context) => [
-                  const PopupMenuItem(value: 'all', child: Text('All')),
-                  const PopupMenuItem(
-                    value: 'device',
-                    child: Text('From Device'),
-                  ),
-                  const PopupMenuItem(value: 'link', child: Text('From Link')),
-                ],
+            itemBuilder: (BuildContext context) => [
+              const PopupMenuItem(value: 'all', child: Text('All')),
+              const PopupMenuItem(
+                value: 'device',
+                child: Text('From Device'),
+              ),
+              const PopupMenuItem(value: 'link', child: Text('From Link')),
+            ],
             icon: const Icon(Icons.filter_list),
           ),
         ],
